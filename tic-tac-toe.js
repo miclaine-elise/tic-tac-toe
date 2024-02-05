@@ -40,7 +40,9 @@ function GameController() {
     };
     function checkForWinner() {
         const currentMarker = getCurrentPlayer().marker;
-        checkRows();
+        if (checkRows() || checkColumns()) {
+            gameover = true;
+        };
         function checkMarkers(marker) {
             return marker === currentMarker;
         }
@@ -49,10 +51,21 @@ function GameController() {
                 const boardRow = board.getBoard()[row];
                 if (boardRow.every(checkMarkers)) {
                     console.log("gameover");
-                    gameover = true;
+                    return true;
+                }
+
+            }
+            return false;
+        }
+        function checkColumns() {
+            for (let column = 0; column < 3; column++) {
+                const boardColumn = board.getBoard().map(d => d[column]);
+                if (boardColumn.every(checkMarkers)) {
+                    console.log("gameover");
+                    return true;
                 }
             }
-
+            return false;
         }
     }
     let gameover = false;
