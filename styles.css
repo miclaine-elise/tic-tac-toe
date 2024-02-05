@@ -1,0 +1,15 @@
+#grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(250px, 1fr));
+    grid-template-rows: repeat(3, minmax(250px, 1fr));
+}
+
+.column1,
+.column2 {
+    border-right: solid 3px black;
+}
+
+.row1,
+.row2 {
+    border-bottom: solid 3px black;
+}
