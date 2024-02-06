@@ -16,8 +16,7 @@ function Gameboard() {
 }
 
 function GameController() {
-    const board = Gameboard();
-    console.table(board.getBoard());
+
     const players = [
         {
             name: "Player One",
@@ -27,22 +26,38 @@ function GameController() {
             name: "Player Two",
             marker: "O"
         }];
-    let currentPlayer = players[0];
+    let currentPlayer = players[0]; //Initiliaze current player to player[0]
+    // const getCurrentPlayer = () => currentPlayer;
+    let gameover = false;
+    const board = Gameboard();
+    console.table(board.getBoard());
     function playTurn(currentPlayer) {
         console.log(currentPlayer.name + "'s turn");
-        column = prompt("Enter which column to place your marker.");
-        row = prompt("Enter which row to place your marker.");
-        board.addMarker(row - 1, column - 1, getCurrentPlayer().marker);
+        do {
+            column = prompt("Enter which column to place your marker.");
+            row = prompt("Enter which row to place your marker.");
+            // checkCellAvailability(row, column);
+        }
+        while (!checkCellAvailability(row, column));
+        board.addMarker(row - 1, column - 1, currentPlayer.marker);
         console.table(board.getBoard());
+    }
+    function checkCellAvailability(row, column) {
+        let cell = board.getBoard()[row - 1][column - 1];
+        if (cell !== '') {
+            console.log("Cell already taken, choose another.")
+            return false;
+        }
+        return true;
     }
     const switchPlayerTurn = () => {
         currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
     };
     function checkForWinner() {
-        const currentMarker = getCurrentPlayer().marker;
+        const currentMarker = currentPlayer.marker;
         if (checkRows() || checkColumns() || checkDiagonals()) {
             gameover = true;
-            console.log("Gameover" + getCurrentPlayer().name + " wins");
+            console.log("Gameover" + currentPlayer.name + " wins");
         };
         function checkMarkers(marker) {
             return marker === currentMarker;
@@ -84,13 +99,11 @@ function GameController() {
         }
     }
 
-    let gameover = false;
-    const getCurrentPlayer = () => currentPlayer;
     while (gameover == false) {
         playTurn(currentPlayer);
         checkForWinner();
         switchPlayerTurn();
     }
-    return { currentPlayer }
+    // return { currentPlayer } Not sure if I will need this yet
 }
 GameController();
