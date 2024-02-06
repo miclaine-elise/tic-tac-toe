@@ -26,8 +26,9 @@ function GameController() {
             name: "Player Two",
             marker: "O"
         }];
+    const display = displayBoard();
     let currentPlayer = players[0]; //Initiliaze current player to player[0]
-    // const getCurrentPlayer = () => currentPlayer;
+    const getCurrentPlayer = () => currentPlayer;
     let gameover = false;
     const board = Gameboard();
     console.table(board.getBoard());
@@ -39,6 +40,7 @@ function GameController() {
         }
         while (!checkCellAvailability(row, column));
         board.addMarker(row - 1, column - 1, currentPlayer.marker);
+        display.displayMarker(row, column, currentPlayer.marker);
         console.table(board.getBoard());
         checkForTie();
     }
@@ -118,6 +120,23 @@ function GameController() {
         checkForTie();
         switchPlayerTurn();
     }
-    // return { currentPlayer } Not sure if I will need this yet
+    return { getCurrentPlayer }
 }
-GameController();
+
+function displayBoard() {
+    for (let i = 1; i < 4; i++) {
+        for (let j = 1; j < 4; j++) {
+            eval("var row" + i + "col" + j + " = " + "document.querySelector('.row" + i + ".column" + j + "')");
+        }
+    }
+    function displayMarker(row, column, marker) {
+        const cellName = "row" + row + "col" + column;
+        eval(cellName + ".textContent = '" + marker + "'");
+    }
+    return { displayMarker }
+};
+
+let startBtn = document.querySelector('button');
+startBtn.addEventListener('click', function () {
+    GameController();
+});
