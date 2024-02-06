@@ -36,11 +36,11 @@ function GameController() {
         do {
             column = prompt("Enter which column to place your marker.");
             row = prompt("Enter which row to place your marker.");
-            // checkCellAvailability(row, column);
         }
         while (!checkCellAvailability(row, column));
         board.addMarker(row - 1, column - 1, currentPlayer.marker);
         console.table(board.getBoard());
+        checkForTie();
     }
     function checkCellAvailability(row, column) {
         let cell = board.getBoard()[row - 1][column - 1];
@@ -98,10 +98,24 @@ function GameController() {
             }
         }
     }
-
+    function checkForTie() {
+        const currentBoard = board.getBoard();
+        console.log(currentBoard);
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (currentBoard[i][j] === '') {
+                    return false;
+                }
+            }
+        }
+        console.log("Tie Game!")
+        gameover = true;
+        return true;
+    }
     while (gameover == false) {
         playTurn(currentPlayer);
         checkForWinner();
+        checkForTie();
         switchPlayerTurn();
     }
     // return { currentPlayer } Not sure if I will need this yet
