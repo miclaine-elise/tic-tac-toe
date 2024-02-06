@@ -40,8 +40,9 @@ function GameController() {
     };
     function checkForWinner() {
         const currentMarker = getCurrentPlayer().marker;
-        if (checkRows() || checkColumns()) {
+        if (checkRows() || checkColumns() || checkDiagonals()) {
             gameover = true;
+            console.log("Gameover" + getCurrentPlayer().name + " wins");
         };
         function checkMarkers(marker) {
             return marker === currentMarker;
@@ -50,24 +51,39 @@ function GameController() {
             for (let row = 0; row < 3; row++) {
                 const boardRow = board.getBoard()[row];
                 if (boardRow.every(checkMarkers)) {
-                    console.log("gameover");
                     return true;
                 }
-
             }
             return false;
         }
+
         function checkColumns() {
             for (let column = 0; column < 3; column++) {
                 const boardColumn = board.getBoard().map(d => d[column]);
                 if (boardColumn.every(checkMarkers)) {
-                    console.log("gameover");
                     return true;
                 }
             }
             return false;
         }
+
+        function checkDiagonals() {
+            let diagonal1 = [];
+            diagonal1[0] = board.getBoard()[0][0];
+            diagonal1[1] = board.getBoard()[1][1];
+            diagonal1[2] = board.getBoard()[2][2];
+            let diagonal2 = [];
+            diagonal2[0] = board.getBoard()[0][2];
+            diagonal2[1] = board.getBoard()[1][1];
+            diagonal2[2] = board.getBoard()[2][0];
+            if (diagonal1.every(checkMarkers)) {
+                return true;
+            } else if (diagonal2.every(checkMarkers)) {
+                return true;
+            }
+        }
     }
+
     let gameover = false;
     const getCurrentPlayer = () => currentPlayer;
     while (gameover == false) {
