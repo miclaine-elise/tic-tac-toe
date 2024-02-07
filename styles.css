@@ -14,13 +14,13 @@ body {
     grid-template-rows: repeat(3, minmax(100px, 200px));
 }
 
-.column1,
-.column2 {
+div[data-column="1"],
+div[data-column="2"] {
     border-right: solid 8px black;
 }
 
-.row1,
-.row2 {
+div[data-row="1"],
+div[data-row="2"] {
     border-bottom: solid 8px black;
 }
 

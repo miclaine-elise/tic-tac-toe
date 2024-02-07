@@ -31,12 +31,8 @@ function GameController() {
     let gameover = false;
     const board = Gameboard();
     console.table(board.getBoard());
-    function playTurn() {
+    function playTurn(row, column) {
         console.log(currentPlayer.name + "'s turn");
-        do {
-            column = prompt("Enter which column to place your marker.");
-            row = prompt("Enter which row to place your marker.");
-        }
         while (!checkCellAvailability(row, column));
         board.addMarker(row - 1, column - 1, currentPlayer.marker);
         display.displayMarker(row, column, currentPlayer.marker);
@@ -144,7 +140,7 @@ function displayBoard() {
                 this.textContent = '';
             })
             cells[i].addEventListener('mousedown', function (event) {
-
+                console.log(this.dataset.row);
             })
         }
 
