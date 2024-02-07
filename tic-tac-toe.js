@@ -118,6 +118,7 @@ function displayBoard() {
         cell.removeEventListener('mouseleave', mouseLeave);
         cell.removeEventListener('mousedown', placeMarker);
         cell.textContent = marker;
+        cell.style.color = "black";
     }
     function mouseEnter() {
         this.textContent = currentPlayer.marker;

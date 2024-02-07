@@ -27,4 +27,5 @@ div[data-row="2"] {
 .cell {
     font-size: 200px;
     text-align: center;
+    color: gray;
 }
