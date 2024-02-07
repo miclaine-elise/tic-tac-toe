@@ -33,20 +33,11 @@ function GameController() {
     console.table(board.getBoard());
     function playTurn(row, column) {
         console.log(currentPlayer.name + "'s turn");
-        while (!checkCellAvailability(row, column));
         board.addMarker(row - 1, column - 1, currentPlayer.marker);
         console.table(board.getBoard());
         checkForWinner();
         checkForTie();
         console.log(currentPlayer);
-    }
-    function checkCellAvailability(row, column) {
-        let cell = board.getBoard()[row - 1][column - 1];
-        if (cell !== '') {
-            console.log("Cell already taken, choose another.")
-            return false;
-        }
-        return true;
     }
     const switchPlayerTurn = () => {
         currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
@@ -123,8 +114,9 @@ function displayBoard() {
         }
     }
     function updateBoard(cell, marker) {
-        cell.removeEventListener('mouseenter', mouseEnter)
-        cell.removeEventListener('mouseleave', mouseLeave)
+        cell.removeEventListener('mouseenter', mouseEnter);
+        cell.removeEventListener('mouseleave', mouseLeave);
+        cell.removeEventListener('mousedown', placeMarker);
         cell.textContent = marker;
     }
     function mouseEnter() {
@@ -133,18 +125,19 @@ function displayBoard() {
     function mouseLeave() {
         this.textContent = '';
     }
+    function placeMarker() {
+        currentPlayer = controller.getCurrentPlayer();
+        controller.playTurn(this.dataset.row, this.dataset.column);
+        updateBoard(this, currentPlayer.marker);
+        controller.switchPlayerTurn();
+        currentPlayer = controller.getCurrentPlayer();
+    }
     const cells = document.querySelectorAll('.cell');
     for (i = 0; i <= cells.length - 1; i++) {
         if (cells[i].textContent === '') {
             cells[i].addEventListener('mouseenter', mouseEnter);
             cells[i].addEventListener('mouseleave', mouseLeave);
-            cells[i].addEventListener('mousedown', function (event) {
-                currentPlayer = controller.getCurrentPlayer();
-                controller.playTurn(this.dataset.row, this.dataset.column);
-                updateBoard(this, currentPlayer.marker);
-                controller.switchPlayerTurn();
-                currentPlayer = controller.getCurrentPlayer();
-            })
+            cells[i].addEventListener('mousedown', placeMarker);
         }
 
     }
