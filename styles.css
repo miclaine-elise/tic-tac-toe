@@ -5,6 +5,7 @@ body {
     height: 100vh;
     font-family: "Montserrat", sans-serif;
     font-weight: 700;
+    background-color: rgb(224, 219, 213)
 }
 
 #grid {
@@ -28,4 +29,32 @@ div[data-row="2"] {
     font-size: 200px;
     text-align: center;
     color: gray;
+}
+
+dialog[open] {
+    display: grid;
+    border-radius: 1rem;
+    top: 35%;
+    height: 20%;
+    width: 30%;
+    position: fixed;
+    justify-items: center;
+    align-items: center;
+    box-shadow: 0.25rem 0.25rem 1rem rgb(49, 49, 49);
+}
+
+#winner-message {
+    font-size: 3rem;
+}
+
+#restart {
+    border-radius: 0.5rem;
+    border: solid 3px;
+    font-size: 2rem;
+    background-color: white;
+}
+
+#restart:hover {
+    background-color: rgb(224, 219, 213);
+    cursor: pointer;
 }

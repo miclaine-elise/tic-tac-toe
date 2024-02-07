@@ -3,6 +3,8 @@ function Gameboard() {
     const rows = 3;
     const columns = 3;
     let board = [];
+    console.table("gameboard ran again");
+    console.table(board);
     for (let i = 0; i < rows; i++) {
         board[i] = [];
         for (let j = 0; j < columns; j++) {
@@ -29,8 +31,11 @@ function GameController() {
     let currentPlayer = players[0]; //Initiliaze current player to player[0]
     const getCurrentPlayer = () => currentPlayer;
     let gameover = false;
-    const board = Gameboard();
-    console.table(board.getBoard());
+    const getGameStatus = () => gameover;
+    let board = Gameboard();
+    function resetController() {
+        board = Gameboard();
+    }
     function playTurn(row, column) {
         console.log(currentPlayer.name + "'s turn");
         board.addMarker(row - 1, column - 1, currentPlayer.marker);
@@ -101,12 +106,12 @@ function GameController() {
         gameover = true;
         return true;
     }
-    return { getCurrentPlayer, playTurn, switchPlayerTurn }
+    return { getCurrentPlayer, playTurn, switchPlayerTurn, getGameStatus, resetController }
 }
 
 function displayBoard() {
+    const board = Gameboard();
     const controller = GameController();
-    // const board = GameBoard();
     let currentPlayer = controller.getCurrentPlayer();
     for (let i = 1; i < 4; i++) {
         for (let j = 1; j < 4; j++) {
@@ -130,6 +135,7 @@ function displayBoard() {
         currentPlayer = controller.getCurrentPlayer();
         controller.playTurn(this.dataset.row, this.dataset.column);
         updateBoard(this, currentPlayer.marker);
+        checkGameOver();
         controller.switchPlayerTurn();
         currentPlayer = controller.getCurrentPlayer();
     }
@@ -140,7 +146,26 @@ function displayBoard() {
             cells[i].addEventListener('mouseleave', mouseLeave);
             cells[i].addEventListener('mousedown', placeMarker);
         }
+    }
+    let gameOverWindow = document.querySelector('dialog');
+    let winnerMessage = document.querySelector('#winner-message');
+    let restartBtn = document.querySelector('#restart');
+    function restartGame() {
+        controller.resetController();
+        gameOverWindow.close();
 
+
+    }
+    function checkGameOver() {
+
+        restartBtn.addEventListener("mousedown", restartGame);
+        let gameOver = controller.getGameStatus();
+        if (gameOver) {
+            let winner = controller.getCurrentPlayer();
+            winnerMessage.textContent = winner.marker + "'s win!";
+
+            gameOverWindow.show();
+        }
     }
     return { updateBoard }
 };
