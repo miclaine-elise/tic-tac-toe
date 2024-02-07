@@ -35,9 +35,10 @@ function GameController() {
         console.log(currentPlayer.name + "'s turn");
         while (!checkCellAvailability(row, column));
         board.addMarker(row - 1, column - 1, currentPlayer.marker);
-        display.displayMarker(row, column, currentPlayer.marker);
         console.table(board.getBoard());
+        checkForWinner();
         checkForTie();
+        console.log(currentPlayer);
     }
     function checkCellAvailability(row, column) {
         let cell = board.getBoard()[row - 1][column - 1];
@@ -109,43 +110,45 @@ function GameController() {
         gameover = true;
         return true;
     }
-    // while (gameover == false) {
-    //     playTurn(currentPlayer);
-    //     checkForWinner();
-    //     checkForTie();
-    //     switchPlayerTurn();
-    // }
-    return { getCurrentPlayer, playTurn }
+    return { getCurrentPlayer, playTurn, switchPlayerTurn }
 }
 
 function displayBoard() {
     const controller = GameController();
-    const currentPlayer = controller.getCurrentPlayer();
+    // const board = GameBoard();
+    let currentPlayer = controller.getCurrentPlayer();
     for (let i = 1; i < 4; i++) {
         for (let j = 1; j < 4; j++) {
             eval("var row" + i + "col" + j + " = " + "document.querySelector('.row" + i + ".column" + j + "')");
         }
     }
-    function displayMarker(row, column, marker) {
-        const cellName = "row" + row + "col" + column;
-        eval(cellName + ".textContent = '" + marker + "'");
+    function updateBoard(cell, marker) {
+        cell.removeEventListener('mouseenter', mouseEnter)
+        cell.removeEventListener('mouseleave', mouseLeave)
+        cell.textContent = marker;
+    }
+    function mouseEnter() {
+        this.textContent = currentPlayer.marker;
+    }
+    function mouseLeave() {
+        this.textContent = '';
     }
     const cells = document.querySelectorAll('.cell');
     for (i = 0; i <= cells.length - 1; i++) {
         if (cells[i].textContent === '') {
-            cells[i].addEventListener('mouseenter', function (event) {
-                this.textContent = currentPlayer.marker;
-            })
-            cells[i].addEventListener('mouseleave', function (event) {
-                this.textContent = '';
-            })
+            cells[i].addEventListener('mouseenter', mouseEnter);
+            cells[i].addEventListener('mouseleave', mouseLeave);
             cells[i].addEventListener('mousedown', function (event) {
-                console.log(this.dataset.row);
+                currentPlayer = controller.getCurrentPlayer();
+                controller.playTurn(this.dataset.row, this.dataset.column);
+                updateBoard(this, currentPlayer.marker);
+                controller.switchPlayerTurn();
+                currentPlayer = controller.getCurrentPlayer();
             })
         }
 
     }
-    return { displayMarker }
+    return { updateBoard }
 };
 
 let startBtn = document.querySelector('button');
