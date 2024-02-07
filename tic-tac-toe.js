@@ -35,6 +35,7 @@ function GameController() {
     let board = Gameboard();
     function resetController() {
         board = Gameboard();
+        gameover = false;
     }
     function playTurn(row, column) {
         console.log(currentPlayer.name + "'s turn");
@@ -141,11 +142,11 @@ function displayBoard() {
     }
     const cells = document.querySelectorAll('.cell');
     for (i = 0; i <= cells.length - 1; i++) {
-        if (cells[i].textContent === '') {
-            cells[i].addEventListener('mouseenter', mouseEnter);
-            cells[i].addEventListener('mouseleave', mouseLeave);
-            cells[i].addEventListener('mousedown', placeMarker);
-        }
+        cells[i].textContent = '';
+        cells[i].addEventListener('mouseenter', mouseEnter);
+        cells[i].addEventListener('mouseleave', mouseLeave);
+        cells[i].addEventListener('mousedown', placeMarker);
+
     }
     let gameOverWindow = document.querySelector('dialog');
     let winnerMessage = document.querySelector('#winner-message');
@@ -153,11 +154,10 @@ function displayBoard() {
     function restartGame() {
         controller.resetController();
         gameOverWindow.close();
-
+        displayBoard();
 
     }
     function checkGameOver() {
-
         restartBtn.addEventListener("mousedown", restartGame);
         let gameOver = controller.getGameStatus();
         if (gameOver) {
