@@ -26,13 +26,12 @@ function GameController() {
             name: "Player Two",
             marker: "O"
         }];
-    const display = displayBoard();
     let currentPlayer = players[0]; //Initiliaze current player to player[0]
     const getCurrentPlayer = () => currentPlayer;
     let gameover = false;
     const board = Gameboard();
     console.table(board.getBoard());
-    function playTurn(currentPlayer) {
+    function playTurn() {
         console.log(currentPlayer.name + "'s turn");
         do {
             column = prompt("Enter which column to place your marker.");
@@ -114,16 +113,18 @@ function GameController() {
         gameover = true;
         return true;
     }
-    while (gameover == false) {
-        playTurn(currentPlayer);
-        checkForWinner();
-        checkForTie();
-        switchPlayerTurn();
-    }
-    return { getCurrentPlayer }
+    // while (gameover == false) {
+    //     playTurn(currentPlayer);
+    //     checkForWinner();
+    //     checkForTie();
+    //     switchPlayerTurn();
+    // }
+    return { getCurrentPlayer, playTurn }
 }
 
 function displayBoard() {
+    const controller = GameController();
+    const currentPlayer = controller.getCurrentPlayer();
     for (let i = 1; i < 4; i++) {
         for (let j = 1; j < 4; j++) {
             eval("var row" + i + "col" + j + " = " + "document.querySelector('.row" + i + ".column" + j + "')");
@@ -133,10 +134,25 @@ function displayBoard() {
         const cellName = "row" + row + "col" + column;
         eval(cellName + ".textContent = '" + marker + "'");
     }
+    const cells = document.querySelectorAll('.cell');
+    for (i = 0; i <= cells.length - 1; i++) {
+        if (cells[i].textContent === '') {
+            cells[i].addEventListener('mouseenter', function (event) {
+                this.textContent = currentPlayer.marker;
+            })
+            cells[i].addEventListener('mouseleave', function (event) {
+                this.textContent = '';
+            })
+            cells[i].addEventListener('mousedown', function (event) {
+
+            })
+        }
+
+    }
     return { displayMarker }
 };
 
 let startBtn = document.querySelector('button');
 startBtn.addEventListener('click', function () {
-    GameController();
+    displayBoard();
 });

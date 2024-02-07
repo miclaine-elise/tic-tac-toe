@@ -1,15 +1,30 @@
-#grid {
+body {
     display: grid;
-    grid-template-columns: repeat(3, minmax(250px, 1fr));
-    grid-template-rows: repeat(3, minmax(250px, 1fr));
+    justify-content: center;
+    align-content: center;
+    height: 100vh;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+}
+
+#grid {
+    align-self: center;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(100px, 200px));
+    grid-template-rows: repeat(3, minmax(100px, 200px));
 }
 
 .column1,
 .column2 {
-    border-right: solid 3px black;
+    border-right: solid 8px black;
 }
 
 .row1,
 .row2 {
-    border-bottom: solid 3px black;
+    border-bottom: solid 8px black;
+}
+
+.cell {
+    font-size: 200px;
+    text-align: center;
 }
