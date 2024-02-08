@@ -164,7 +164,4 @@ function displayBoard() {
     return { updateBoard }
 };
 
-let startBtn = document.querySelector('button');
-startBtn.addEventListener('click', function () {
-    displayBoard();
-});
+displayBoard();
