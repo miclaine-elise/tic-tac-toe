@@ -16,7 +16,6 @@ function Gameboard() {
 }
 
 function GameController() {
-
     const players = [
         {
             name: "Player One",
@@ -29,10 +28,11 @@ function GameController() {
     let currentPlayer = players[0]; //Initiliaze current player to player[0]
     const getCurrentPlayer = () => currentPlayer;
     let gameover = false;
+    let tieGame = false;
     const getGameStatus = () => gameover;
+    const getTieGameStatus = () => tieGame;
     let board = Gameboard();
     function playTurn(row, column) {
-        console.log(currentPlayer.name + "'s turn");
         board.addMarker(row - 1, column - 1, currentPlayer.marker);
         console.table(board.getBoard());
         checkForWinner();
@@ -87,19 +87,18 @@ function GameController() {
     }
     function checkForTie() {
         const currentBoard = board.getBoard();
-        console.log(currentBoard);
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 if (currentBoard[i][j] === '') {
+                    tieGame = true;
                     return false;
                 }
             }
         }
-        console.log("Tie Game!")
         gameover = true;
         return true;
     }
-    return { getCurrentPlayer, playTurn, switchPlayerTurn, getGameStatus }
+    return { getCurrentPlayer, playTurn, switchPlayerTurn, getGameStatus, getTieGameStatus }
 }
 
 function displayBoard() {
@@ -109,7 +108,6 @@ function displayBoard() {
     const cells = document.querySelectorAll('.cell');
     const controller = GameController();
     currentPlayer = controller.getCurrentPlayer();
-    console.log(currentPlayer);
     for (let i = 1; i < 4; i++) {
         for (let j = 1; j < 4; j++) {
             eval("var row" + i + "col" + j + " = " + "document.querySelector('.row" + i + ".column" + j + "')");
@@ -152,8 +150,13 @@ function displayBoard() {
     function checkGameOver() {
         let gameOver = controller.getGameStatus();
         if (gameOver) {
-            let winner = controller.getCurrentPlayer();
-            winnerMessage.textContent = winner.marker + "'s win!";
+            let tieGame = controller.getTieGameStatus();
+            if (tieGame) {
+                winnerMessage.textContent = "Tie Game!"
+            } else {
+                let winner = controller.getCurrentPlayer();
+                winnerMessage.textContent = winner.marker + "'s win!";
+            }
             gameOverWindow.show();
             restartBtn.addEventListener("mousedown", restartGame);
         }
