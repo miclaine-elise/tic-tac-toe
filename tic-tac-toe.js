@@ -3,8 +3,6 @@ function Gameboard() {
     const rows = 3;
     const columns = 3;
     let board = [];
-    console.table("gameboard ran again");
-    console.table(board);
     for (let i = 0; i < rows; i++) {
         board[i] = [];
         for (let j = 0; j < columns; j++) {
@@ -33,17 +31,12 @@ function GameController() {
     let gameover = false;
     const getGameStatus = () => gameover;
     let board = Gameboard();
-    function resetController() {
-        board = Gameboard();
-        gameover = false;
-    }
     function playTurn(row, column) {
         console.log(currentPlayer.name + "'s turn");
         board.addMarker(row - 1, column - 1, currentPlayer.marker);
         console.table(board.getBoard());
         checkForWinner();
         checkForTie();
-        console.log(currentPlayer);
     }
     const switchPlayerTurn = () => {
         currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
@@ -52,7 +45,6 @@ function GameController() {
         const currentMarker = currentPlayer.marker;
         if (checkRows() || checkColumns() || checkDiagonals()) {
             gameover = true;
-            console.log("Gameover" + currentPlayer.name + " wins");
         };
         function checkMarkers(marker) {
             return marker === currentMarker;
@@ -107,17 +99,29 @@ function GameController() {
         gameover = true;
         return true;
     }
-    return { getCurrentPlayer, playTurn, switchPlayerTurn, getGameStatus, resetController }
+    return { getCurrentPlayer, playTurn, switchPlayerTurn, getGameStatus }
 }
 
 function displayBoard() {
-    const board = Gameboard();
+    const gameOverWindow = document.querySelector('dialog');
+    const winnerMessage = document.querySelector('#winner-message');
+    const restartBtn = document.querySelector('#restart');
+    const cells = document.querySelectorAll('.cell');
     const controller = GameController();
-    let currentPlayer = controller.getCurrentPlayer();
+    currentPlayer = controller.getCurrentPlayer();
+    console.log(currentPlayer);
     for (let i = 1; i < 4; i++) {
         for (let j = 1; j < 4; j++) {
             eval("var row" + i + "col" + j + " = " + "document.querySelector('.row" + i + ".column" + j + "')");
         }
+    }
+
+    for (i = 0; i <= cells.length - 1; i++) {
+        cells[i].textContent = '';
+        cells[i].style.color = "gray";
+        cells[i].addEventListener('mouseenter', mouseEnter);
+        cells[i].addEventListener('mouseleave', mouseLeave);
+        cells[i].addEventListener('mousedown', placeMarker);
     }
     function updateBoard(cell, marker) {
         cell.removeEventListener('mouseenter', mouseEnter);
@@ -140,31 +144,18 @@ function displayBoard() {
         controller.switchPlayerTurn();
         currentPlayer = controller.getCurrentPlayer();
     }
-    const cells = document.querySelectorAll('.cell');
-    for (i = 0; i <= cells.length - 1; i++) {
-        cells[i].textContent = '';
-        cells[i].addEventListener('mouseenter', mouseEnter);
-        cells[i].addEventListener('mouseleave', mouseLeave);
-        cells[i].addEventListener('mousedown', placeMarker);
-
-    }
-    let gameOverWindow = document.querySelector('dialog');
-    let winnerMessage = document.querySelector('#winner-message');
-    let restartBtn = document.querySelector('#restart');
     function restartGame() {
-        controller.resetController();
         gameOverWindow.close();
+        restartBtn.removeEventListener("mousedown", restartGame);
         displayBoard();
-
     }
     function checkGameOver() {
-        restartBtn.addEventListener("mousedown", restartGame);
         let gameOver = controller.getGameStatus();
         if (gameOver) {
             let winner = controller.getCurrentPlayer();
             winnerMessage.textContent = winner.marker + "'s win!";
-
             gameOverWindow.show();
+            restartBtn.addEventListener("mousedown", restartGame);
         }
     }
     return { updateBoard }
