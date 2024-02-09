@@ -169,6 +169,7 @@ function screenController() {
         gameOverWindow.close();
         restartBtn.removeEventListener("mousedown", restartGame);
         controller.resetBoard();
+        currentPlayer = controller.getCurrentPlayer();
         displayBoard();
     }
     function checkGameOver() {
