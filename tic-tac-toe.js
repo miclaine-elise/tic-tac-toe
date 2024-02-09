@@ -43,7 +43,7 @@ function GameController() {
         board.addMarker(row - 1, column - 1, currentPlayer.marker);
         console.table(board.getBoard());
         checkForWinner();
-        if (!checkForWinner) {
+        if (gameover == false) {
             checkForTie();
         }
     }
@@ -193,7 +193,5 @@ function screenController() {
     }
     return { updateBoard }
 };
-let startBtn = document.querySelector('#start-game');
-startBtn.addEventListener("mousedown", function (event) {
-    screenController();
-});
+
+screenController();
